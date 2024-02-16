@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Shared.ApiModels
 {
-    public abstract class VehicleModel
+    public class VehicleModel
     {
         public int Id { get; set; }
 
@@ -12,5 +13,8 @@ namespace Shared.ApiModels
         public string Model { get; set; }
 
         public int MaintenanceRate { get; set; }
+
+        [JsonIgnore]
+        public IList<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
     }
 }
