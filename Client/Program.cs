@@ -17,6 +17,8 @@ builder.Services.AddBlazoredLocalStorageAsSingleton();
 
 // Add services
 builder.Services.AddScoped<IVehicleService, VehicleService>();
+builder.Services.AddScoped<IVehicleModelService, VehicleModelService>();
+builder.Services.AddScoped<IMaintenanceService, MaintenanceService>();
 
 var app = builder.Build();
 

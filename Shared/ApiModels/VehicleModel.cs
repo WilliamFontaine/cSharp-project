@@ -14,7 +14,6 @@ namespace Shared.ApiModels
 
         public int MaintenanceRate { get; set; }
 
-        [JsonIgnore]
-        public IList<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
+        public virtual IList<Vehicle>? Vehicles { get; set; }
     }
 }

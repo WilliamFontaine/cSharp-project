@@ -92,20 +92,24 @@ namespace cSharp_project.Migrations
 
             modelBuilder.Entity("Shared.ApiModels.Maintenance", b =>
                 {
-                    b.HasOne("Shared.ApiModels.Vehicle", null)
+                    b.HasOne("Shared.ApiModels.Vehicle", "Vehicle")
                         .WithMany("Maintenances")
                         .HasForeignKey("VehicleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Vehicle");
                 });
 
             modelBuilder.Entity("Shared.ApiModels.Vehicle", b =>
                 {
-                    b.HasOne("Shared.ApiModels.VehicleModel", null)
+                    b.HasOne("Shared.ApiModels.VehicleModel", "VehicleModel")
                         .WithMany("Vehicles")
                         .HasForeignKey("VehicleModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("VehicleModel");
                 });
 
             modelBuilder.Entity("Shared.ApiModels.Vehicle", b =>

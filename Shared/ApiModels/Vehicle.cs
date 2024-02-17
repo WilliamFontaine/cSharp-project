@@ -19,12 +19,10 @@ namespace Shared.ApiModels
 
         public VehicleEnergy Energy { get; set; }
 
-        [JsonIgnore]
         public int VehicleModelId { get; set; }
 
-        [JsonIgnore]
-        public IList<Maintenance> Maintenances { get; set; } = new List<Maintenance>();
+        public virtual IList<Maintenance>? Maintenances { get; set; }
 
-        public virtual VehicleModel VehicleModel { get; set; }
+        public virtual VehicleModel? VehicleModel { get; set; }
     }
 }

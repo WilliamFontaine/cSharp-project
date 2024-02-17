@@ -46,6 +46,7 @@ namespace cSharp_project.Controllers
             {
                 return NotFound("Related vehicle model not found");
             }
+            vehicle.VehicleModel = vehicleModel;
             _context.SaveChanges();
             return Created($"/api/vehicle/{vehicle.Id}", vehicle);
         }
