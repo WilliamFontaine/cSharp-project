@@ -54,7 +54,7 @@ namespace cSharp_project.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    MaintenanceMileage = table.Column<int>(type: "INTEGER", nullable: false),
+                    MaintenanceMileage = table.Column<int>(type: "INTEGER", nullable: true),
                     WorkDescription = table.Column<string>(type: "TEXT", nullable: false),
                     VehicleId = table.Column<int>(type: "INTEGER", nullable: false)
                 },

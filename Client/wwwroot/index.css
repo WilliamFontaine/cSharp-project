@@ -2,3 +2,9 @@
     margin: 0;
     padding: 0;
 }
+
+.container {
+    background-color: lightsteelblue;
+    width: 85%;
+    height: 85%;
+}

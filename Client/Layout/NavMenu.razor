@@ -1,28 +1,33 @@
 ﻿@using MudBlazor
 @inject NavigationManager NavigationManager
+@using Client.Translations
+@using Microsoft.Extensions.Localization
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject IStringLocalizer<Dictionary> Localizer
+
 <div class="nav">
     <nav>
-        <div class="nav-item" onclick="@(() => Navigate(""))">
+        <div class="nav-item" @onclick="@(() => Navigate(""))">
             <NavLink class="nav-link" Match="NavLinkMatch.All">
                 <div>
                     <MudBlazor.MudIcon Icon="@Icons.Material.Rounded.Home" Style="width: 24px; height: 24px"/>
-                    <p>Home</p>
+                    <p>@Localizer[nameof(Dictionary.Home)]</p>
                 </div>
             </NavLink>
         </div>
-        <div class="nav-item" onclick="@(() => Navigate("vehicle"))">
+        <div class="nav-item" @onclick="@(() => Navigate("vehicle"))">
             <NavLink class="nav-link">
                 <div>
-                    <MudBlazor.MudIcon Icon="@Icons.Material.Rounded.DirectionsCar" Style="width: 24px; height: 24px"  />
-                    <p>Vehicle</p>
+                    <MudBlazor.MudIcon Icon="@Icons.Material.Rounded.DirectionsCar" Style="width: 24px; height: 24px"/>
+                    <p>@Localizer[nameof(Dictionary.Vehicle)]</p>
                 </div>
             </NavLink>
         </div>
-        <div class="nav-item" onclick="@(() => Navigate("vehicle-model"))">
+        <div class="nav-item" @onclick="@(() => Navigate("vehicle-model"))">
             <NavLink class="nav-link">
                 <div>
-                    <MudBlazor.MudIcon Icon="@Icons.Material.Rounded.Category" Style="width: 24px; height: 24px" />
-                    <p>VehicleModel</p>
+                    <MudBlazor.MudIcon Icon="@Icons.Material.Rounded.Category" Style="width: 24px; height: 24px"/>
+                    <p>@Localizer[nameof(Dictionary.VehicleModel)]</p>
                 </div>
             </NavLink>
         </div>
@@ -30,8 +35,10 @@
 </div>
 
 @code {
+
     private void Navigate(string url)
     {
         NavigationManager.NavigateTo(url);
     }
+
 }

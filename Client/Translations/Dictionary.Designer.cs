@@ -61,11 +61,254 @@ namespace Client.Translations {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Actions.
+        /// </summary>
+        public static string Actions {
+            get {
+                return ResourceManager.GetString("Actions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Add.
+        /// </summary>
+        public static string Add {
+            get {
+                return ResourceManager.GetString("Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Add maintenance to the vehicle.
+        /// </summary>
+        public static string AddMaintenance {
+            get {
+                return ResourceManager.GetString("AddMaintenance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Add a vehicle.
+        /// </summary>
+        public static string AddVehicle {
+            get {
+                return ResourceManager.GetString("AddVehicle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à DotNet project.
         /// </summary>
         public static string AppTitle {
             get {
                 return ResourceManager.GetString("AppTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Brand.
+        /// </summary>
+        public static string Brand {
+            get {
+                return ResourceManager.GetString("Brand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Year of registration.
+        /// </summary>
+        public static string DateRegistration {
+            get {
+                return ResourceManager.GetString("DateRegistration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Dalay.
+        /// </summary>
+        public static string Delay {
+            get {
+                return ResourceManager.GetString("Delay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Edit.
+        /// </summary>
+        public static string Edit {
+            get {
+                return ResourceManager.GetString("Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Edit a vehicle.
+        /// </summary>
+        public static string EditVehicle {
+            get {
+                return ResourceManager.GetString("EditVehicle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Energy.
+        /// </summary>
+        public static string Energy {
+            get {
+                return ResourceManager.GetString("Energy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Frequency.
+        /// </summary>
+        public static string Frequency {
+            get {
+                return ResourceManager.GetString("Frequency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Home.
+        /// </summary>
+        public static string Home {
+            get {
+                return ResourceManager.GetString("Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Overdue maintenance.
+        /// </summary>
+        public static string HomeTitle {
+            get {
+                return ResourceManager.GetString("HomeTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à License plate.
+        /// </summary>
+        public static string LicensePlate {
+            get {
+                return ResourceManager.GetString("LicensePlate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Loading....
+        /// </summary>
+        public static string Loading {
+            get {
+                return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Description of maintenance.
+        /// </summary>
+        public static string MaintenanceDesc {
+            get {
+                return ResourceManager.GetString("MaintenanceDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Maintenance list.
+        /// </summary>
+        public static string MaintenanceList {
+            get {
+                return ResourceManager.GetString("MaintenanceList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Mileage.
+        /// </summary>
+        public static string Mileage {
+            get {
+                return ResourceManager.GetString("Mileage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Model.
+        /// </summary>
+        public static string Model {
+            get {
+                return ResourceManager.GetString("Model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Add a vehicle model.
+        /// </summary>
+        public static string ModelAdd {
+            get {
+                return ResourceManager.GetString("ModelAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Edit a vehicle model.
+        /// </summary>
+        public static string ModelEdit {
+            get {
+                return ResourceManager.GetString("ModelEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Vehicle models.
+        /// </summary>
+        public static string ModelTitle {
+            get {
+                return ResourceManager.GetString("ModelTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Vehicle.
+        /// </summary>
+        public static string Vehicle {
+            get {
+                return ResourceManager.GetString("Vehicle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Vehicle detail.
+        /// </summary>
+        public static string VehicleDetail {
+            get {
+                return ResourceManager.GetString("VehicleDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Vehicle Information.
+        /// </summary>
+        public static string VehicleInfo {
+            get {
+                return ResourceManager.GetString("VehicleInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Vehicle model.
+        /// </summary>
+        public static string VehicleModel {
+            get {
+                return ResourceManager.GetString("VehicleModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Vehicle.
+        /// </summary>
+        public static string VehicleTitle {
+            get {
+                return ResourceManager.GetString("VehicleTitle", resourceCulture);
             }
         }
     }

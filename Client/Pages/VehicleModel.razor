@@ -1,7 +1,135 @@
 ﻿@page "/vehicle-model"
+@using Client.Services
+@using Shared
+@inject IVehicleModelService VehicleModelService
+@using Client.Translations
+@using Microsoft.Extensions.Localization
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
-<h3>VehicleModel</h3>
+@inject IStringLocalizer<Dictionary> Localizer
+
+<div class="container">
+    @if (IsInitialized == false)
+    {
+        <p>
+            <em>@Localizer[nameof(Dictionary.Loading)]</em>
+        </p>
+    }
+    else
+    {
+        <div class="content">
+            <div class="title">
+                <h1>@Localizer[nameof(Dictionary.ModelTitle)]</h1>
+            </div>
+            <div class="add-button">
+                <MudBlazor.MudIcon Icon="@Icons.Material.TwoTone.Add" @onclick="() => OpenPopup(null)" Style="cursor: pointer; width: 50px; height: 50px;"/>
+            </div>
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>@Localizer[nameof(Dictionary.Brand)]</th>
+                        <th>@Localizer[nameof(Dictionary.Model)]</th>
+                        <th>@Localizer[nameof(Dictionary.Frequency)]</th>
+                        <th>@Localizer[nameof(Dictionary.Actions)]</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var vehiclesModel in _vehiclesModel)
+                    {
+                        <tr>
+                            <td>@vehiclesModel.Brand</td>
+                            <td>@vehiclesModel.Model</td>
+                            <td>@vehiclesModel.MaintenanceRate</td>
+                            <td>
+                                <MudBlazor.MudIcon Icon="@Icons.Material.TwoTone.Edit" Style="cursor: pointer; width: 24px; height: 24px;" @onclick="() => OpenPopup(vehiclesModel)"/>
+                                <MudBlazor.MudIcon Icon="@Icons.Material.TwoTone.DeleteOutline" Style="cursor: pointer; width: 24px; height: 24px;" @onclick="() => DeleteVehicleModel(vehiclesModel)"/>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@if (PopupVisible)
+{
+    <div class="popin">
+        <div class="popin-content">
+            <p class="popin-title">@PopupTitle</p>
+            <form>
+                <div class="form-group">
+                    <label for="brand">@Localizer[nameof(Dictionary.Brand)]</label>
+                    <select @bind="_selectedVehicleModel.Brand" id="brand" class="form-control" required>
+                        @foreach (var brand in Enum.GetValues(typeof(VehicleBrand)))
+                        {
+                            <option value="@brand">@brand.ToString()</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="model">@Localizer[nameof(Dictionary.Model)]</label>
+                    <input @bind="_selectedVehicleModel.Model" type="text" class="form-control" id="model" required/>
+
+                </div>
+                <div class="form-group">
+                    <label for="maintenanceRate">@Localizer[nameof(Dictionary.Frequency)]</label>
+                    <input @bind="_selectedVehicleModel.MaintenanceRate" type="number" class="form-control" id="maintenanceRate" required/>
+                </div>
+                <button type="submit" @onclick="SaveVehicleModel" class="btn btn-primary">@PopupButtonName</button>
+
+            </form>
+
+            <div class="popin-close">
+                <MudBlazor.MudIcon Icon="@Icons.Material.Filled.Close" @onclick="() => PopupVisible = false" Style="cursor: pointer; width: 50px; height: 50px;"/>
+            </div>
+        </div>
+    </div>
+}
+
 
 @code {
+    private bool IsInitialized { get; set; }
+    private bool PopupVisible { get; set; }
+    private string PopupButtonName { get; set; } = null!;
+    private string PopupTitle { get; set; } = null!;
+    private Shared.ApiModels.VehicleModel[] _vehiclesModel = null!;
+    private Shared.ApiModels.VehicleModel _selectedVehicleModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _vehiclesModel = await VehicleModelService.GetVehicleModels();
+        IsInitialized = true;
+    }
+
+    private void OpenPopup(Shared.ApiModels.VehicleModel? vehicleModel)
+    {
+        _selectedVehicleModel = vehicleModel ?? new Shared.ApiModels.VehicleModel();
+        PopupTitle = vehicleModel == null ? Localizer[nameof(Dictionary.ModelAdd)] : Localizer[nameof(Dictionary.ModelEdit)];
+        PopupButtonName = vehicleModel == null ? Localizer[nameof(Dictionary.Add)] : Localizer[nameof(Dictionary.Edit)];
+        PopupVisible = true;
+    }
+
+    private async Task SaveVehicleModel()
+    {
+        if (_selectedVehicleModel.Id == 0)
+        {
+            await VehicleModelService.CreateVehicleModel(_selectedVehicleModel);
+        }
+        else
+        {
+            await VehicleModelService.UpdateVehicleModel(_selectedVehicleModel.Id, _selectedVehicleModel);
+        }
+
+        PopupVisible = false;
+    }
+
+    private async Task DeleteVehicleModel(Shared.ApiModels.VehicleModel vehicleModel)
+    {
+        await VehicleModelService.DeleteVehicleModel(vehicleModel.Id);
+        _vehiclesModel = await VehicleModelService.GetVehicleModels();
+    }
 
 }

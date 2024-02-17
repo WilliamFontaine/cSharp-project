@@ -1,44 +1,265 @@
 ﻿@page "/vehicle"
 @using Client.Services
+@using Shared
 @inject IVehicleService VehicleService
+@inject IVehicleModelService VehicleModelService
+@inject IMaintenanceService MaintenanceService
+@using Client.Translations
+@using Microsoft.Extensions.Localization
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+@inject IStringLocalizer<Dictionary> Localizer
 
 <div class="container">
-@if (IsInitialized == false)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Marque</th>
-            <th>Modèle</th>
-            <th>Immatriculation</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var vehicle in _vehicles)
-        {
-            <tr>
-                <td>@vehicle.VehicleModel?.Brand</td>
-                <td>@vehicle.VehicleModel?.Model</td>
-                <td>@vehicle.LicensePlate</td>
-            </tr>
-        }
-        </tbody>
-    </table>
- 
-}
+    @if (IsInitialized == false)
+    {
+        <p>
+            <em>@Localizer[nameof(Dictionary.Loading)]</em>
+        </p>
+    }
+    else
+    {
+        <div class="content">
+            <div class="title">
+                <h1>@Localizer[nameof(Dictionary.VehicleTitle)]</h1>
+            </div>
+            <div class="add-button">
+                <MudBlazor.MudIcon Icon="@Icons.Material.TwoTone.Add" @onclick="() => OpenPopup(null)" Style="cursor: pointer; width: 50px; height: 50px;"/>
+            </div>
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>@Localizer[nameof(Dictionary.Brand)]</th>
+                        <th>@Localizer[nameof(Dictionary.Model)]</th>
+                        <th>@Localizer[nameof(Dictionary.LicensePlate)]</th>
+                        <th>@Localizer[nameof(Dictionary.Actions)]</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var vehicle in _vehicles)
+                    {
+                        <tr>
+                            <td>@vehicle.VehicleModel?.Brand</td>
+                            <td>@vehicle.VehicleModel?.Model</td>
+                            <td>@vehicle.LicensePlate</td>
+                            <td>
+                                <MudBlazor.MudIcon Icon="@Icons.Material.TwoTone.ReadMore" Style="cursor: pointer; width: 24px; height: 24px;" @onclick="() => OpenDetailPopup(vehicle)"/>
+                                <MudBlazor.MudIcon Icon="@Icons.Material.TwoTone.Edit" Style="cursor: pointer; width: 24px; height: 24px;" @onclick="() => OpenPopup(vehicle)"/>
+                                <MudBlazor.MudIcon Icon="@Icons.Material.TwoTone.DeleteOutline" Style="cursor: pointer; width: 24px; height: 24px;" @onclick="() => DeleteVehicle(vehicle)"/>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
 </div>
+
+@if (PopupVisible)
+{
+    <div class="popin">
+        <div class="popin-content">
+            <p class="popin-title">@PopupTitle</p>
+            <form>
+                <div class="form-group">
+                    <label for="brand">@Localizer[nameof(Dictionary.Model)]</label>
+                    <select @bind="_selectedVehicle.VehicleModelId" id="brand" class="form-control" required>
+                        @foreach (var vehicleModel in _vehicleModels)
+                        {
+                            <option value="@vehicleModel.Id">@vehicleModel.Brand - @vehicleModel.Model</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="licensePlate">@Localizer[nameof(Dictionary.LicensePlate)]</label>
+                    <input @bind="_selectedVehicle.LicensePlate" id="licensePlate" class="form-control" placeholder="AA-123-AA" minlength="7" maxlength="9" required/>
+                </div>
+                <div class="form-group">
+                    <label for="mileage">@Localizer[nameof(Dictionary.Mileage)]</label>
+                    <input @bind="_selectedVehicle.Mileage" id="mileage" class="form-control" required/>
+                </div>
+                <div class="form-group">
+                    <label for="purchaseDate">@Localizer[nameof(Dictionary.DateRegistration)]</label>
+                    <input @bind="_selectedVehicle.Year" id="purchaseDate" class="form-control" type="number" size="4" minlength="4" maxlength="4" required/>
+                </div>
+                <div class="form-group">
+                    <label for="energy" class="form-label">@Localizer[nameof(Dictionary.Energy)]</label>
+                    <select @bind="_selectedVehicle.Energy" id="energy" class="form-control" required>
+                        @foreach (var energy in Enum.GetValues(typeof(VehicleEnergy)))
+                        {
+                            <option value="@energy">@energy.ToString()</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" @onclick="SaveVehicleModel" class="btn btn-primary">@PopupButtonName</button>
+
+            </form>
+
+            <div class="popin-close">
+                <MudBlazor.MudIcon Icon="@Icons.Material.Filled.Close" @onclick="() => PopupVisible = false" Style="cursor: pointer; width: 50px; height: 50px;"/>
+            </div>
+        </div>
+    </div>
+}
+
+@if (DetailPopupVisible)
+{
+    <div class="popin">
+        <div class="popin-content">
+            <p class="popin-title">@Localizer[nameof(Dictionary.VehicleDetail)]</p>
+            <div class="detail-content">
+                <div class="left-part">
+                    <p>@Localizer[nameof(Dictionary.VehicleInfo)]</p>
+                    <div class="info-group">
+                        <p class="label">@Localizer[nameof(Dictionary.LicensePlate)]</p>
+                        <p class="value">@_selectedVehicle.LicensePlate</p>
+                    </div>
+                    <div class="info-group">
+                        <p class="label">@Localizer[nameof(Dictionary.DateRegistration)]</p>
+                        <p class="value">@_selectedVehicle.Year</p>
+                    </div>
+                    <div class="info-group">
+                        <p class="label">@Localizer[nameof(Dictionary.Mileage)]</p>
+                        <pre class="value">@_selectedVehicle.Mileage</pre>
+                    </div>
+                    <div class="info-group">
+                        <p class="label">@Localizer[nameof(Dictionary.Energy)]</p>
+                        <p class="value">@_selectedVehicle.Energy</p>
+                    </div>
+                </div>
+
+                <div class="right-part">
+                    <p class="subtitle">@Localizer[nameof(Dictionary.MaintenanceList)]</p>
+                    <div class="add-maintenace-button">
+                        <MudBlazor.MudIcon Icon="@Icons.Material.TwoTone.Add" @onclick="() => OpenMaintenancePopup()" Style="cursor: pointer; width: 50px; height: 50px;"/>
+                    </div>
+                    <div class="table-wrapper mainteance-tabble-wrapper">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th class="list-label">@Localizer[nameof(Dictionary.Mileage)]</th>
+                                <th class="list-content">@Localizer[nameof(Dictionary.MaintenanceDesc)]</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if (_selectedVehicle.Maintenances != null)
+                            {
+                                foreach (var maintenance in _selectedVehicle.Maintenances)
+                                {
+                                    <tr>
+                                        <td>@maintenance.MaintenanceMileage</td>
+                                        <td>@maintenance.WorkDescription</td>
+                                    </tr>
+                                }
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="popin-close">
+                <MudBlazor.MudIcon Icon="@Icons.Material.Filled.Close" @onclick="() => DetailPopupVisible = false" Style="cursor: pointer; width: 50px; height: 50px;"/>
+            </div>
+        </div>
+    </div>
+}
+
+@if (MaintenancePopupVisible)
+{
+    <div class="popin maintenance-popin">
+        <div class="popin-content">
+            <p class="popin-title">@Localizer[nameof(Dictionary.AddMaintenance)]</p>
+            <form>
+                <div class="form-group">
+                    <label for="maintenanceMileage">@Localizer[nameof(Dictionary.Mileage)]</label>
+                    <input @bind="_selectedMaintenance.MaintenanceMileage" id="maintenanceMileage" class="form-control" disabled required/>
+                </div>
+                <div class="form-group">
+                    <label for="workDescription">@Localizer[nameof(Dictionary.MaintenanceDesc)]</label>
+                    <textarea @bind="_selectedMaintenance.WorkDescription" id="workDescription" class="form-control" required rows="10"></textarea>
+                </div>
+                <button type="submit" @onclick="SaveMaintenace" class="btn btn-primary">@Localizer[nameof(Dictionary.Add)]</button>
+            </form>
+
+            <div class="popin-close">
+                <MudBlazor.MudIcon Icon="@Icons.Material.Filled.Close" @onclick="() => MaintenancePopupVisible = false" Style="cursor: pointer; width: 50px; height: 50px;"/>
+            </div>
+        </div>
+    </div>
+}
+
 
 @code {
     private bool IsInitialized { get; set; }
+    private bool PopupVisible { get; set; }
+    private bool DetailPopupVisible { get; set; }
+    private bool MaintenancePopupVisible { get; set; }
+    private string PopupButtonName { get; set; } = null!;
+    private string PopupTitle { get; set; } = null!;
     private Shared.ApiModels.Vehicle[] _vehicles = null!;
+    private Shared.ApiModels.Vehicle _selectedVehicle = null!;
+    private Shared.ApiModels.VehicleModel[] _vehicleModels = null!;
+    private Shared.ApiModels.Maintenance _selectedMaintenance = null!;
+
 
     protected override async Task OnInitializedAsync()
     {
         _vehicles = await VehicleService.GetVehicles();
+        _vehicleModels = await VehicleModelService.GetVehicleModels();
         IsInitialized = true;
     }
+
+    private void OpenPopup(Shared.ApiModels.Vehicle? vehicle)
+    {
+        _selectedVehicle = vehicle ?? new Shared.ApiModels.Vehicle();
+        PopupTitle = vehicle == null ? Localizer[nameof(Dictionary.AddVehicle)] : Localizer[nameof(Dictionary.EditVehicle)];
+        PopupButtonName = vehicle == null ? Localizer[nameof(Dictionary.Add)] : Localizer[nameof(Dictionary.Edit)];
+        PopupVisible = true;
+    }
+
+    private void OpenDetailPopup(Shared.ApiModels.Vehicle vehicle)
+    {
+        _selectedVehicle = vehicle;
+        DetailPopupVisible = true;
+    }
+
+    private void OpenMaintenancePopup()
+    {
+        _selectedMaintenance = new Shared.ApiModels.Maintenance
+        {
+            MaintenanceMileage = _selectedVehicle.Mileage,
+            VehicleId = _selectedVehicle.Id
+        };
+        MaintenancePopupVisible = true;
+    }
+
+    private async Task SaveVehicleModel()
+    {
+        if (_selectedVehicle.Id == 0)
+        {
+            await VehicleService.CreateVehicle(_selectedVehicle);
+        }
+        else
+        {
+            await VehicleService.UpdateVehicle(_selectedVehicle.Id, _selectedVehicle);
+        }
+
+        PopupVisible = false;
+    }
+
+    private async Task SaveMaintenace()
+    {
+        await MaintenanceService.CreateMaintenance(_selectedMaintenance);
+        _selectedVehicle = await VehicleService.GetVehicle(_selectedVehicle.Id);
+        MaintenancePopupVisible = false;
+    }
+
+    private async Task DeleteVehicle(Shared.ApiModels.Vehicle vehicle)
+    {
+        await VehicleService.DeleteVehicle(vehicle.Id);
+        _vehicles = await VehicleService.GetVehicles();
+    }
+
 }

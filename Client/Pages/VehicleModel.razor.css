@@ -53,21 +53,23 @@
     flex-direction: row;
     align-items: center;
     width: 50%;
+
 }
 
-    .form-group label {
-        margin-bottom: 5px;
-        margin-right: 10px;
-        width: 30%;
-        text-align: right;
-    }
+.form-group label {
+    margin-bottom: 5px;
+    margin-right: 10px;
+    width: 30%;
+    text-align: right;
+        
+}
 
-    .form-group input, .form-group select {
-        padding: 5px;
-        border-radius: 5px;
-        border: 2px solid #cecece;
-        width: 70%;
-    }
+.form-group input, .form-group select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 2px solid #cecece;
+    width: 70%;
+}
 
 .content {
     position: relative;
@@ -101,19 +103,22 @@
     width: 100%;
 }
 
-    .table thead {
-        background-color: #cecece;
-    }
+.table thead {
+    background-color: #cecece;
+}
 
-    .table th, .table td {
-        padding: 10px;
-        text-align: center;
-    }
+.table th, .table td {
+    padding: 10px;
+    text-align: center;
+}
 
-    .table tbody tr:nth-child(odd) {
-        background-color: #cecece;
-    }
+.table tbody tr:nth-child(odd) {
+    background-color: #cecece;
+}
 
-    .table tbody tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
+.table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+
+

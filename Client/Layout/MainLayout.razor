@@ -1,7 +1,6 @@
 ﻿@using System.Globalization
 @using Client.Translations
 @using Microsoft.Extensions.Localization
-@using MudBlazor
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 @inject NavigationManager Navigation
 @inherits LayoutComponentBase
@@ -12,13 +11,13 @@
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        <NavMenu/>
     </div>
 
     <div class="topbar">
         <div class="language-switcher" @onclick="ToggleLanguage">
             <p>@DisplayName</p>
-            <MudBlazor.MudIcon Icon="@Icons.Material.Rounded.Language" Style="width: 24px; height: 24px" />
+            <MudBlazor.MudIcon Icon="@Icons.Material.Rounded.Language" Style="width: 24px; height: 24px"/>
         </div>
     </div>
 
@@ -29,6 +28,7 @@
 
 @code {
     private CultureInfo[] _availableCultures = [new CultureInfo("en-US"), new CultureInfo("fr-FR")];
+
     public CultureInfo SelectedCulture
     {
         get => CultureInfo.CurrentCulture;
@@ -39,10 +39,12 @@
             Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
         }
     }
+
     public String DisplayName => SelectedCulture.Equals(new CultureInfo("en-US")) ? "English" : "Français";
 
     private void ToggleLanguage()
     {
         SelectedCulture = SelectedCulture.Name == "en-US" ? new CultureInfo("fr-FR") : new CultureInfo("en-US");
     }
+
 }

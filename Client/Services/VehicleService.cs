@@ -9,9 +9,9 @@ namespace Client.Services
     {
         Task<Vehicle[]> GetVehicles();
         Task<Vehicle> GetVehicle(int id);
-        Task<Vehicle> CreateVehicle(Vehicle vehicle);
-        Task<Vehicle> UpdateVehicle(int id, Vehicle vehicle);
-        Task<Vehicle> DeleteVehicle(int id);
+        Task CreateVehicle(Vehicle vehicle);
+        Task UpdateVehicle(int id, Vehicle vehicle);
+        Task DeleteVehicle(int id);
     }
 
     public class VehicleService(HttpClient httpClient) : IVehicleService
@@ -26,6 +26,7 @@ namespace Client.Services
             {
                 return Empty<Vehicle>();
             }
+
             return (await httpResponse.Content.ReadFromJsonAsync<Vehicle[]>())!;
         }
 
@@ -36,33 +37,23 @@ namespace Client.Services
             {
                 return null!;
             }
+
             return (await httpResponse.Content.ReadFromJsonAsync<Vehicle>())!;
         }
 
-        public async Task<Vehicle> CreateVehicle(Vehicle vehicle)
+        public async Task CreateVehicle(Vehicle vehicle)
         {
-            var response = await _httpClient.PostAsJsonAsync(RequestUri, vehicle);
-            return (await response.Content.ReadFromJsonAsync<Vehicle>())!;
+            await _httpClient.PostAsJsonAsync(RequestUri, vehicle);
         }
 
-        public async Task<Vehicle> UpdateVehicle(int id, Vehicle vehicle)
+        public async Task UpdateVehicle(int id, Vehicle vehicle)
         {
-            var httpResponse = await _httpClient.PutAsJsonAsync($"{RequestUri}/{id}", vehicle);
-            if (httpResponse.StatusCode == HttpStatusCode.NotFound)
-            {
-                return null!;
-            }
-            return (await httpResponse.Content.ReadFromJsonAsync<Vehicle>())!;
+            await _httpClient.PutAsJsonAsync($"{RequestUri}/{id}", vehicle);
         }
 
-        public async Task<Vehicle> DeleteVehicle(int id)
+        public async Task DeleteVehicle(int id)
         {
-            var httpResponse = await _httpClient.DeleteAsync($"{RequestUri}/{id}");
-            if (httpResponse.StatusCode == HttpStatusCode.NotFound)
-            {
-                return null!;
-            }
-            return (await httpResponse.Content.ReadFromJsonAsync<Vehicle>())!;
+            await _httpClient.DeleteAsync($"{RequestUri}/{id}");
         }
-    }   
+    }
 }

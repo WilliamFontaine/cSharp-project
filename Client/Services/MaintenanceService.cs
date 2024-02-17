@@ -1,45 +1,47 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net;
+using Shared.ApiModels;
+using System.Net.Http.Json;
+using static System.Array;
 
 namespace Client.Services
 {
     public interface IMaintenanceService
     {
-        Task<Shared.ApiModels.Maintenance[]> GetMaintenances();
-        Task<Shared.ApiModels.Maintenance[]> GetLateMaintenances();
-        Task<Shared.ApiModels.Maintenance> GetMaintenance(int id);
-        Task<Shared.ApiModels.Maintenance> CreateMaintenance(Shared.ApiModels.Maintenance maintenance);
+        Task<Maintenance[]> GetMaintenances();
+        Task<Maintenance[]> GetLateMaintenances();
+        Task<Maintenance> GetMaintenance(int id);
+        Task CreateMaintenance(Maintenance maintenance);
     }
 
-    public class MaintenanceService : IMaintenanceService
+    public class MaintenanceService(HttpClient httpClient) : IMaintenanceService
     {
         private const string RequestUri = "https://localhost:7048/api/Maintenance";
-        private readonly HttpClient _httpClient;
+        private readonly HttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
-        public MaintenanceService(HttpClient httpClient)
+        public async Task<Maintenance[]> GetMaintenances()
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            var httpResponse = await _httpClient.GetAsync(RequestUri);
+            if (httpResponse.StatusCode == HttpStatusCode.NoContent) return Empty<Maintenance>();
+            return (await httpResponse.Content.ReadFromJsonAsync<Maintenance[]>())!;
         }
 
-        public async Task<Shared.ApiModels.Maintenance[]> GetMaintenances()
+        public async Task<Maintenance[]> GetLateMaintenances()
         {
-            return await _httpClient.GetFromJsonAsync < Shared.ApiModels.Maintenance[]>(RequestUri);
+            var httpResponse = await _httpClient.GetAsync($"{RequestUri}/late-maintenance");
+            if (httpResponse.StatusCode == HttpStatusCode.NoContent) return Empty<Maintenance>();
+            return (await httpResponse.Content.ReadFromJsonAsync<Maintenance[]>())!;
         }
 
-        public async Task<Shared.ApiModels.Maintenance[]> GetLateMaintenances()
+        public async Task<Maintenance> GetMaintenance(int id)
         {
-            return await _httpClient.GetFromJsonAsync < Shared.ApiModels.Maintenance[]>($"{RequestUri}/late-maintenance");
+            var httpResponse = await _httpClient.GetAsync($"{RequestUri}/{id}");
+            if (httpResponse.StatusCode == HttpStatusCode.NotFound) return null!;
+            return (await httpResponse.Content.ReadFromJsonAsync<Maintenance>())!;
         }
 
-        public async Task<Shared.ApiModels.Maintenance> GetMaintenance(int id)
+        public async Task CreateMaintenance(Maintenance maintenance)
         {
-            return await _httpClient.GetFromJsonAsync<Shared.ApiModels.Maintenance>($"{RequestUri}/{id}");
-        }
-
-        public async Task<Shared.ApiModels.Maintenance> CreateMaintenance(Shared.ApiModels.Maintenance maintenance)
-        {
-            var response = await _httpClient.PostAsJsonAsync(RequestUri, maintenance);
-            return await response.Content.ReadFromJsonAsync<Shared.ApiModels.Maintenance>();
+            await _httpClient.PostAsJsonAsync(RequestUri, maintenance);
         }
     }
-
 }

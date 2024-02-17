@@ -22,29 +22,33 @@ namespace cSharp_project.Controllers
             {
                 return NoContent();
             }
+
             return Ok(maintenances);
         }
 
         [HttpGet("late-maintenance")]
         public IActionResult GetLateMaintenance()
         {
-            var maintenances = MaintenanceRepository.ToList();
-
+            var maintenances = MaintenanceRepository
+                .Include(m => m.Vehicle)
+                .Include(m => m.Vehicle!.VehicleModel)
+                .ToList();
             if (maintenances.Count == 0)
             {
-                return NotFound();
+                return NoContent();
             }
 
             var lateMaintenances = maintenances
-                .Where(m => m.Vehicle != null && m.MaintenanceMileage > m.Vehicle.Mileage)
                 .GroupBy(m => m.VehicleId)
                 .Select(g => g.OrderByDescending(m => m.MaintenanceMileage).First())
+                .Where(m => m.Vehicle?.Mileage > (m.MaintenanceMileage + m.Vehicle?.VehicleModel?.MaintenanceRate))
                 .ToList();
 
             if (lateMaintenances.Count == 0)
             {
-                return NotFound();
+                return NoContent();
             }
+
             return Ok(lateMaintenances);
         }
 
@@ -56,13 +60,20 @@ namespace cSharp_project.Controllers
             {
                 return NotFound();
             }
+
             return Ok(maintenance);
         }
 
         [HttpPost]
         public IActionResult Post([FromBody] Maintenance maintenance)
         {
-            maintenance.MaintenanceMileage = maintenance.Vehicle.Mileage;
+            var vehicle = VehicleRepository.Find(maintenance.VehicleId);
+            if (vehicle == null)
+            {
+                return NotFound("Related vehicle not found");
+            }
+
+            maintenance.MaintenanceMileage = vehicle.Mileage;
             MaintenanceRepository.Add(maintenance);
             _context.SaveChanges();
             return Created($"/api/maintenance/{maintenance.Id}", maintenance);

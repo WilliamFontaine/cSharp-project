@@ -8,10 +8,11 @@ namespace cSharp_project.Controllers
     [ApiController]
     public class VehicleModelController(DbContext context) : ControllerBase
     {
-
         private readonly DbContext _context = context;
 
         private DbSet<VehicleModel> VehicleModelRepository => _context.Set<VehicleModel>();
+
+        private DbSet<Vehicle> VehicleRepository => _context.Set<Vehicle>();
 
         [HttpGet]
         public IActionResult Get()
@@ -19,8 +20,9 @@ namespace cSharp_project.Controllers
             var vehicleModels = VehicleModelRepository.ToList();
             if (vehicleModels.Count == 0)
             {
-                return NotFound();
+                return NoContent();
             }
+
             return Ok(vehicleModels);
         }
 
@@ -32,6 +34,7 @@ namespace cSharp_project.Controllers
             {
                 return NoContent();
             }
+
             return Ok(vehicleModel);
         }
 
@@ -52,6 +55,7 @@ namespace cSharp_project.Controllers
             {
                 return NotFound();
             }
+
             existingVehicleModel.Brand = vehicleModel.Brand;
             existingVehicleModel.Model = vehicleModel.Model;
             existingVehicleModel.MaintenanceRate = vehicleModel.MaintenanceRate;
@@ -67,10 +71,13 @@ namespace cSharp_project.Controllers
             {
                 return NotFound();
             }
-            foreach (var vehicle in vehicleModel.Vehicles)
+
+            var vehicles = VehicleRepository.ToList().Where(v => v.VehicleModelId == id);
+            foreach (var vehicle in vehicles)
             {
-                _context.Remove(vehicle);
+                VehicleRepository.Remove(vehicle);
             }
+
             _context.SaveChanges();
             VehicleModelRepository.Remove(vehicleModel);
             _context.SaveChanges();

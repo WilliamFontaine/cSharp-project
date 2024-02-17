@@ -9,11 +9,8 @@ namespace Shared.ApiModels
 
         public VehicleBrand Brand { get; set; }
 
-        [MinLength(1)]
-        public string Model { get; set; }
+        [MinLength(1)] public string? Model { get; set; }
 
-        public int MaintenanceRate { get; set; }
-
-        public virtual IList<Vehicle>? Vehicles { get; set; }
+        [Range(0, int.MaxValue)] public int MaintenanceRate { get; set; }
     }
 }

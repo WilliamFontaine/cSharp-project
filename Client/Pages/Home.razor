@@ -1,12 +1,64 @@
 ﻿@page "/"
+@using Shared.ApiModels
+@using Client.Services
+@inject IMaintenanceService MaintenanceService
 @using Client.Translations
 @using Microsoft.Extensions.Localization
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
 @inject IStringLocalizer<Dictionary> Localizer
 
-<div>
-
+<div class="container">
+    @if (IsInitialized == false)
+    {
+        <p>@Localizer[nameof(Dictionary.Loading)]</p>
+    }
+    else
+    {
+        <div class="content">
+            <div class="title">
+                <h1>@Localizer[nameof(Dictionary.HomeTitle)]</h1>
+            </div>
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>@Localizer[nameof(Dictionary.Brand)]</th>
+                        <th>@Localizer[nameof(Dictionary.Model)]</th>
+                        <th>@Localizer[nameof(Dictionary.LicensePlate)]</th>
+                        <th>@Localizer[nameof(Dictionary.Delay)]</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var maintenance in _maintenances)
+                    {
+                        <tr>
+                            <td>@maintenance.Vehicle.VehicleModel.Model</td>
+                            <td>@maintenance.Vehicle.VehicleModel.Brand</td>
+                            <td>@maintenance.Vehicle.LicensePlate</td>
+                            <td>-@LateMileage(maintenance)km</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
 </div>
 
 @code {
-     
+    private bool IsInitialized { get; set; }
+    private Maintenance[] _maintenances = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _maintenances = await MaintenanceService.GetLateMaintenances();
+        IsInitialized = true;
+    }
+
+    protected int LateMileage(Shared.ApiModels.Maintenance maintenance)
+    {
+        return (int)(maintenance.Vehicle?.Mileage - (maintenance.MaintenanceMileage + maintenance.Vehicle?.VehicleModel?.MaintenanceRate))!;
+    }
+
 }

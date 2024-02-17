@@ -7,14 +7,12 @@ namespace Shared.ApiModels
     {
         public int Id { get; set; }
 
-        public int? MaintenanceMileage { get; set; }
+        [Range(0, int.MaxValue)] public int? MaintenanceMileage { get; set; }
 
-        [Required]
-        public string WorkDescription { get; set; }
+        [Required] public string? WorkDescription { get; set; }
 
         public int VehicleId { get; set; }
 
-        [JsonIgnore]
         public virtual Vehicle? Vehicle { get; set; }
     }
 }

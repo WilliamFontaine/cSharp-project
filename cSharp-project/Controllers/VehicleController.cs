@@ -8,7 +8,6 @@ namespace cSharp_project.Controllers
     [ApiController]
     public class VehicleController(DbContext context) : ControllerBase
     {
-
         private readonly DbContext _context = context;
 
         private DbSet<Vehicle> VehicleRepository => _context.Set<Vehicle>();
@@ -23,6 +22,7 @@ namespace cSharp_project.Controllers
             {
                 return NoContent();
             }
+
             return Ok(vehicles);
         }
 
@@ -34,6 +34,7 @@ namespace cSharp_project.Controllers
             {
                 return NotFound();
             }
+
             return Ok(vehicle);
         }
 
@@ -46,7 +47,7 @@ namespace cSharp_project.Controllers
             {
                 return NotFound("Related vehicle model not found");
             }
-            vehicle.VehicleModel = vehicleModel;
+
             _context.SaveChanges();
             return Created($"/api/vehicle/{vehicle.Id}", vehicle);
         }
@@ -59,6 +60,7 @@ namespace cSharp_project.Controllers
             {
                 return NotFound();
             }
+
             existingVehicle.VehicleModelId = vehicle.VehicleModelId;
             existingVehicle.LicensePlate = vehicle.LicensePlate;
             existingVehicle.Year = vehicle.Year;
@@ -69,6 +71,7 @@ namespace cSharp_project.Controllers
             {
                 return NotFound("Related vehicle model not found");
             }
+
             _context.SaveChanges();
             return Ok(existingVehicle);
         }
@@ -81,10 +84,10 @@ namespace cSharp_project.Controllers
             {
                 return NotFound();
             }
+
             VehicleRepository.Remove(vehicle);
             _context.SaveChanges();
             return NoContent();
         }
-
     }
 }
