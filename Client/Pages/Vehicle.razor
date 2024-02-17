@@ -1,10 +1,9 @@
 ﻿@page "/vehicle"
 @using Client.Services
-@using Shared
 @inject IVehicleService VehicleService
 
-
-@if (vehicles == null)
+<div class="container">
+@if (IsInitialized == false)
 {
     <p><em>Loading...</em></p>
 }
@@ -12,30 +11,34 @@ else
 {
     <table class="table">
         <thead>
-            <tr>
-                <th>Make</th>
-                <th>Model</th>
-                <th>Year</th>
-            </tr>
+        <tr>
+            <th>Marque</th>
+            <th>Modèle</th>
+            <th>Immatriculation</th>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var vehicle in vehicles)
-            {
-                <tr>
-                    <td>@vehicle.VehicleModel.Brand</td>
-                    <td>@vehicle.VehicleModel.Model</td>
-                    <td>@vehicle.LicensePlate</td>
-                </tr>
-            }
+        @foreach (var vehicle in _vehicles)
+        {
+            <tr>
+                <td>@vehicle.VehicleModel?.Brand</td>
+                <td>@vehicle.VehicleModel?.Model</td>
+                <td>@vehicle.LicensePlate</td>
+            </tr>
+        }
         </tbody>
     </table>
+ 
 }
+</div>
 
 @code {
-    private Shared.ApiModels.Vehicle[]? vehicles;
+    private bool IsInitialized { get; set; }
+    private Shared.ApiModels.Vehicle[] _vehicles = null!;
 
     protected override async Task OnInitializedAsync()
     {
-        vehicles = await VehicleService.GetVehicles();
+        _vehicles = await VehicleService.GetVehicles();
+        IsInitialized = true;
     }
 }

@@ -21,7 +21,7 @@ namespace cSharp_project.Controllers
             var vehicles = VehicleRepository.Include(v => v.Maintenances).Include(v => v.VehicleModel).ToList();
             if (vehicles.Count == 0)
             {
-                return NotFound();
+                return NoContent();
             }
             return Ok(vehicles);
         }

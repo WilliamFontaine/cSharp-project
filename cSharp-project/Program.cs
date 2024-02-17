@@ -2,7 +2,7 @@ using cSharp_project;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
-DotNetEnv.Env.Load();
+DotNetEnv.Env.Load("../.env");
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +26,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowClient",
         builder =>
         {
-            builder.WithOrigins("http://localhost:5217")
+            builder.WithOrigins("https://localhost:7085")
                    .AllowAnyMethod()
                    .AllowAnyHeader();
         });

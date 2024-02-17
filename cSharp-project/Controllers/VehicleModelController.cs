@@ -30,7 +30,7 @@ namespace cSharp_project.Controllers
             var vehicleModel = VehicleModelRepository.Find(id);
             if (vehicleModel == null)
             {
-                return NotFound();
+                return NoContent();
             }
             return Ok(vehicleModel);
         }

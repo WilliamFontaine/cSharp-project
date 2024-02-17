@@ -20,7 +20,7 @@ namespace cSharp_project.Controllers
             var maintenances = MaintenanceRepository.ToList();
             if (maintenances.Count == 0)
             {
-                return NotFound();
+                return NoContent();
             }
             return Ok(maintenances);
         }
