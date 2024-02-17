@@ -1,5 +1,6 @@
 using Blazored.LocalStorage;
 using Client;
+using Client.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Globalization;
@@ -13,6 +14,9 @@ builder.Services.AddLocalization();
 
 // Ajout du service Local storage
 builder.Services.AddBlazoredLocalStorageAsSingleton();
+
+// Add services
+builder.Services.AddScoped<IVehicleService, VehicleService>();
 
 var app = builder.Build();
 

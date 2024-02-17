@@ -1,3 +1,64 @@
 .page {
-    background-color: red;
+   position: relative;
+   height: 100vh;
+   width: 100vw;
+   overflow: hidden;
+}
+
+.sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 240px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #ccc;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: lightslategrey;
+}
+
+.topbar {
+    position: absolute;
+    top: 0;
+    left: 240px;
+    right: 0;
+    height: 100px;
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 40px;
+    background-color: lightgray;
+}
+
+.language-switcher {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.language-switcher p {
+    margin: 0;
+    margin-right: 5px;
+}
+
+main {
+    position: absolute;
+    top: 100px;
+    left: 240px;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    padding: 20px;
+    background-color: #f4f4f4;
 }

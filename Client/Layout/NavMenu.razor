@@ -1,38 +1,37 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+﻿@using MudBlazor
+@inject NavigationManager NavigationManager
+<div class="nav">
+    <nav>
+        <div class="nav-item" onclick="@(() => Navigate(""))">
+            <NavLink class="nav-link" Match="NavLinkMatch.All">
+                <div>
+                    <MudBlazor.MudIcon Icon="@Icons.Material.Rounded.Home" Style="width: 24px; height: 24px"/>
+                    <p>Home</p>
+                </div>
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+        <div class="nav-item" onclick="@(() => Navigate("vehicle"))">
+            <NavLink class="nav-link">
+                <div>
+                    <MudBlazor.MudIcon Icon="@Icons.Material.Rounded.DirectionsCar" Style="width: 24px; height: 24px"  />
+                    <p>Vehicle</p>
+                </div>
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+        <div class="nav-item" onclick="@(() => Navigate("vehicle-model"))">
+            <NavLink class="nav-link">
+                <div>
+                    <MudBlazor.MudIcon Icon="@Icons.Material.Rounded.Category" Style="width: 24px; height: 24px" />
+                    <p>VehicleModel</p>
+                </div>
             </NavLink>
         </div>
     </nav>
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
+    private void Navigate(string url)
     {
-        collapseNavMenu = !collapseNavMenu;
+        NavigationManager.NavigateTo(url);
     }
 }

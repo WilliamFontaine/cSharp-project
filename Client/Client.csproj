@@ -8,10 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Pages\Home.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Pages\Home.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.2" />
+    <PackageReference Include="MudBlazor" Version="6.15.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,5 +36,9 @@
 	  <Generator>PublicResXFileCodeGenerator</Generator>
 	  <LastGenOutput>Dictionary.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+	<ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 </Project>

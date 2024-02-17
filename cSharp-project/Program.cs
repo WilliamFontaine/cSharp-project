@@ -1,9 +1,13 @@
 using cSharp_project;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 // Add services to the container.
 
@@ -17,6 +21,17 @@ builder.Services.AddDbContext<DbContext, ProgramContext>(options =>
        options.UseSqlite(DotNetEnv.Env.GetString("DATABASE_URL"))
        );
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowClient",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:5217")
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
@@ -25,6 +40,8 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<DbContext>();
     context.Database.Migrate();
 }
+
+app.UseCors("AllowClient");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
